@@ -54,8 +54,8 @@ public:
     )
     {
         double sII = stdDevPTAM * stdDevPTAM * sii;
-        double sPP = stdDevIMU * stdDevIMU * spp;
-        double sPI = stdDevIMU * stdDevPTAM * spi;
+        double sPP = stdDevIMU  * stdDevIMU  * spp;
+        double sPI = stdDevIMU  * stdDevPTAM * spi;
 
         double tmp = (sII-sPP)*(sII-sPP) + 4*sPI*sPI;
         if(tmp <= 0) tmp = 1e-5;    // numeric issues
