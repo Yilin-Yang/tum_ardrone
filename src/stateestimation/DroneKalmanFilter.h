@@ -45,7 +45,13 @@ public:
     double alphaSingleEstimate;
     double pp, ii, pi;
 
-    inline double computeEstimator(double spp, double sii, double spi, double stdDevPTAM = 0.2, double stdDevIMU = 0.1)
+    inline double computeEstimator(
+        double spp,
+        double sii,
+        double spi,
+        double stdDevPTAM = 0.2,
+        double stdDevIMU = 0.1
+    )
     {
         double sII = stdDevPTAM * stdDevPTAM * sii;
         double sPP = stdDevIMU * stdDevIMU * spp;
@@ -57,7 +63,10 @@ public:
 
     }
 
-    inline ScaleStruct(TooN::Vector<3> ptamDist, TooN::Vector<3> imuDist)
+    inline ScaleStruct(
+        TooN::Vector<3> ptamDist,
+        TooN::Vector<3> imuDist
+    )
     {
         ptam = ptamDist;
         imu = imuDist;
@@ -147,7 +156,13 @@ public:
 
     // predict
     // calculates prediction variance matrix based on gaussian acceleration as error.
-    inline void predict(double ms, double accelerationVar, TooN::Vector<2> controlGains = TooN::makeVector(0,0), double coVarFac = 1, double speedVarFac = 1)
+    inline void predict(
+        double ms,
+        double accelerationVar,
+        TooN::Vector<2> controlGains = TooN::makeVector(0,0),
+        double coVarFac = 1,
+        double speedVarFac = 1
+    )
     {
         /* MATLAB:
            G = [1 ms/1000; 0 1];
@@ -172,7 +187,11 @@ public:
     // predict
     // calculates prediction using the given uncertainty matrix
     // vars is var(0) var(1) covar(0,1)
-    inline void predict(double ms, TooN::Vector<3> vars, TooN::Vector<2> controlGains = TooN::makeVector(0,0))
+    inline void predict(
+        double ms,
+        TooN::Vector<3> vars,
+        TooN::Vector<2> controlGains = TooN::makeVector(0,0)
+    )
     {
         /* MATLAB:
            G = [1 ms/1000; 0 1];
@@ -206,7 +225,11 @@ public:
     inline PFilter() : state(0), var(1e10) {};
     inline PFilter(double initState) : state(initState), var(0) {};
 
-    inline void predict(double ms, double speedVar, double controlGains = 0)
+    inline void predict(
+        double ms,
+        double speedVar,
+        double controlGains = 0
+    )
     {
         /* MATLAB:
            state = state;
@@ -216,7 +239,10 @@ public:
         var += speedVar * ms * ms / 1000000;
     }
 
-    inline void observe(double obs, double obsVar)
+    inline void observe(
+        double obs,
+        double obsVar
+    )
     {
         /* MATLAB:
            obs_w = var / (var + obsVar);
@@ -288,7 +314,11 @@ private:
     double initialScaleSet;
 
     // internal add functions
-    void predictInternal(geometry_msgs::Twist activeControlInfo, int timeSpanMicros, bool useControlGains = true);
+    void predictInternal(
+        geometry_msgs::Twist activeControlInfo,
+        int timeSpanMicros,
+        bool useControlGains = true
+    );
     void observeIMU_XYZ(const ardrone_autonomy::Navdata* nav);
     void observeIMU_RPY(const ardrone_autonomy::Navdata* nav);
     void observePTAM(TooN::Vector<6> pose);
@@ -314,9 +344,8 @@ private:
     double lastVXGain;
     double lastVYGain;
 
-
-
     EstimationNode* node;
+
 public:
     DroneKalmanFilter(EstimationNode* node);
     ~DroneKalmanFilter(void);
@@ -355,16 +384,16 @@ public:
     void setPing(unsigned int navPing, unsigned int vidPing);
 
     // gets current pose and variances (up to where predictUpTo has been called)
-    TooN::Vector<6> getCurrentPose();
+    TooN::Vector<6>           getCurrentPose();
     tum_ardrone::filter_state getCurrentPoseSpeed();
     TooN::Vector<10> getCurrentPoseSpeedAsVec();
     TooN::Vector<10> getCurrentPoseSpeedVariances();
-    TooN::Vector<6> getCurrentPoseVariances();
-    TooN::Vector<6> getCurrentOffsets();
-    TooN::Vector<3> getCurrentScales();
-    TooN::Vector<3> getCurrentScalesForLog();
+    TooN::Vector<6>  getCurrentPoseVariances();
+    TooN::Vector<6>  getCurrentOffsets();
+    TooN::Vector<3>  getCurrentScales();
+    TooN::Vector<3>  getCurrentScalesForLog();
     float getScaleAccuracy();
-    void setCurrentScales(TooN::Vector<3> scales);
+    void  setCurrentScales(TooN::Vector<3> scales);
 
     // adds a PTAM observation. automatically predicts up to timestamp.
     void updateScaleXYZ(TooN::Vector<3> ptamDiff, TooN::Vector<3> imuDiff, TooN::Vector<3> OrgPtamPose);
