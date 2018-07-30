@@ -1,4 +1,4 @@
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with tum_ardrone.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #include "KILand.h"
 #include "../DroneController.h"
 #include "../ControlNode.h"
@@ -25,8 +25,8 @@
 
 KILand::KILand(void)
 {
-	fresh = true;
-	command = "land";
+    fresh = true;
+    command = "land";
 }
 
 
@@ -36,14 +36,14 @@ KILand::~KILand(void)
 
 bool KILand::update(const tum_ardrone::filter_stateConstPtr statePtr)
 {
-	if(fresh)
-	{
-		node->sendLand();
-		printf("issuing land!\n");
-	}
-	fresh = false;
+    if(fresh)
+    {
+        node->sendLand();
+        printf("issuing land!\n");
+    }
+    fresh = false;
 
-	// TODO: maybe do something better here, like still controlling x, y, yaw pos...
-	node->sendControlToDrone(node->hoverCommand);
-	return true;
+    // TODO: maybe do something better here, like still controlling x, y, yaw pos...
+    node->sendControlToDrone(node->hoverCommand);
+    return true;
 }

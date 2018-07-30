@@ -1,4 +1,4 @@
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with tum_ardrone.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #include "tum_ardrone_gui.h"
 #include "RosThread.h"
 #include "PingThread.h"
@@ -32,10 +32,10 @@ unsigned int ros_header_timestamp_base = 0;
 
 int main(int argc, char *argv[])
 {
-	std::cout << "Starting drone_gui Node" << std::endl;
+    std::cout << "Starting drone_gui Node" << std::endl;
 
-	// ROS
-	ros::init(argc, argv, "drone_gui");
+    // ROS
+    ros::init(argc, argv, "drone_gui");
     RosThread t;
     PingThread p;
 
@@ -58,11 +58,11 @@ int main(int argc, char *argv[])
     // wait until windows closed....
     int ec = a.exec();
 
-     // stop ROS again....
+    // stop ROS again....
     t.stopSystem();
     p.stopSystem();
 
-	std::cout << "Exiting drone_gui Node" << std::endl;
+    std::cout << "Exiting drone_gui Node" << std::endl;
 
     return ec;
 }

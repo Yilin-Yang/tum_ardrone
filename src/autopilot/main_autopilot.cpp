@@ -1,4 +1,4 @@
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -17,10 +17,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with tum_ardrone.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- 
- 
- 
+
+
+
+
 #include "ControlNode.h"
 #include "ros/ros.h"
 #include "ros/package.h"
@@ -35,18 +35,18 @@ unsigned int ros_header_timestamp_base = 0;
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "drone_autopilot");
+    ros::init(argc, argv, "drone_autopilot");
 
-  ROS_INFO("Started TUM ArDrone Autopilot Node.");
+    ROS_INFO("Started TUM ArDrone Autopilot Node.");
 
-  ControlNode controlNode;
+    ControlNode controlNode;
 
-  dynamic_reconfigure::Server<tum_ardrone::AutopilotParamsConfig> srv;
-  dynamic_reconfigure::Server<tum_ardrone::AutopilotParamsConfig>::CallbackType f;
-  f = boost::bind(&ControlNode::dynConfCb, &controlNode, _1, _2);
-  srv.setCallback(f);
+    dynamic_reconfigure::Server<tum_ardrone::AutopilotParamsConfig> srv;
+    dynamic_reconfigure::Server<tum_ardrone::AutopilotParamsConfig>::CallbackType f;
+    f = boost::bind(&ControlNode::dynConfCb, &controlNode, _1, _2);
+    srv.setCallback(f);
 
-  controlNode.Loop();
+    controlNode.Loop();
 
-  return 0;
+    return 0;
 }

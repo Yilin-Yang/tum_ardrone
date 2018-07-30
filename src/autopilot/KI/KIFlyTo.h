@@ -1,5 +1,5 @@
 #pragma once
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -20,35 +20,35 @@
  */
 #ifndef __KIFLYTO_H
 #define __KIFLYTO_H
- 
+
 
 #include "KIProcedure.h"
 
 class KIFlyTo : public KIProcedure
 {
 private:
-	int reachedAtClock;
-	bool reached;
-	bool targetSet;
-	bool isCompleted;
+    int reachedAtClock;
+    bool reached;
+    bool targetSet;
+    bool isCompleted;
 
-	int stayTimeMs;
-	double maxControlFactor;
-	double initialReachedDist;
-	double stayWithinDist;
+    int stayTimeMs;
+    double maxControlFactor;
+    double initialReachedDist;
+    double stayWithinDist;
 
 
-	DronePosition checkpoint;
+    DronePosition checkpoint;
 
 public:
-	KIFlyTo(DronePosition checkpoint, 
-		double stayTime = 2,
-		double maxControlFactorP = 1,
-		double initialReachedDistP = 0.2,
-		double stayWithinDistP = 0.5);
+    KIFlyTo(DronePosition checkpoint,
+            double stayTime = 2,
+            double maxControlFactorP = 1,
+            double initialReachedDistP = 0.2,
+            double stayWithinDistP = 0.5);
 
-	~KIFlyTo(void);
-	bool update(const tum_ardrone::filter_stateConstPtr statePtr);
+    ~KIFlyTo(void);
+    bool update(const tum_ardrone::filter_stateConstPtr statePtr);
 };
 
 #endif /* __KIFLYTO_H */

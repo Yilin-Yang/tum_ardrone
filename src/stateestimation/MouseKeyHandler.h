@@ -1,5 +1,5 @@
 #pragma once
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -20,20 +20,20 @@
  */
 #ifndef __MOUSEKEYHANDLER_H
 #define __MOUSEKEYHANDLER_H
- 
- 
+
+
 #pragma once
 #include "cvd/image.h"
 
 class MouseKeyHandler
 {
 public:
-	// default constructors
-	inline MouseKeyHandler() {};
-	inline ~MouseKeyHandler(void) {};
-	virtual inline void on_key_down(int key) {};
-	virtual inline void on_mouse_move(CVD::ImageRef where, int state) {};
-	virtual inline void on_mouse_down(CVD::ImageRef where, int state, int button) {};
-	virtual inline void on_event(int event) {};
+    // default constructors
+    inline MouseKeyHandler() {};
+    inline ~MouseKeyHandler(void) {};
+    virtual inline void on_key_down(int key) {};
+    virtual inline void on_mouse_move(CVD::ImageRef where, int state) {};
+    virtual inline void on_mouse_down(CVD::ImageRef where, int state, int button) {};
+    virtual inline void on_event(int event) {};
 };
 #endif /* __MOUSEKEYHANDLER_H */

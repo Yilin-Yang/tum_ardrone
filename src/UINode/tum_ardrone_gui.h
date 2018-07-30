@@ -1,5 +1,5 @@
 #pragma once
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -20,10 +20,10 @@
  */
 #ifndef __TUMARDRONEGUI_H
 #define __TUMARDRONEGUI_H
- 
- 
- 
- 
+
+
+
+
 #include <QtGui/QWidget>
 #include "ui_tum_ardrone_gui.h"
 #include "geometry_msgs/Twist.h"
@@ -38,25 +38,25 @@ class tum_ardrone_gui : public QWidget
 {
     Q_OBJECT
 
-public slots:
-	void LandClicked();
-	void TakeoffClicked();
-	void ToggleCamClicked();
-	void EmergencyClicked();
+    public slots:
+    void LandClicked();
+    void TakeoffClicked();
+    void ToggleCamClicked();
+    void EmergencyClicked();
 
-	void ClearClicked();
-	void SendClicked();
-	void ClearSendClicked();
-	void ResetClicked();
-	void FlattrimClicked();
+    void ClearClicked();
+    void SendClicked();
+    void ClearSendClicked();
+    void ResetClicked();
+    void FlattrimClicked();
 
-	void LoadFileChanged(QString val);
-	void ToggledUseHovering(int val);
-	void ToggledPingDrone(int val);
+    void LoadFileChanged(QString val);
+    void ToggledUseHovering(int val);
+    void ToggledPingDrone(int val);
 
-	void ControlSourceChanged();
+    void ControlSourceChanged();
 
-private slots:
+    private slots:
     void setCountsSlot(unsigned int nav,unsigned int control,unsigned int pose,unsigned int joy);
     void setPingsSlot(int p500, int p20000);
     void setControlSourceSlot(int cont);
@@ -70,16 +70,16 @@ private slots:
 
 
 signals:
-	void setCountsSignal(unsigned int nav,unsigned int control,unsigned int pose,unsigned int joy);
+    void setCountsSignal(unsigned int nav,unsigned int control,unsigned int pose,unsigned int joy);
     void setPingsSignal(int p500, int p20000);
-	void setControlSourceSignal(int cont);
+    void setControlSourceSignal(int cont);
 
-	void addLogLineSignal(QString);
-	void setAutopilotInfoSignal(QString);
-	void setStateestimationInfoSignal(QString);
+    void addLogLineSignal(QString);
+    void setAutopilotInfoSignal(QString);
+    void setStateestimationInfoSignal(QString);
     void setMotorSpeedsSignal(QString);
 
-	void closeWindowSignal();
+    void closeWindowSignal();
 
 
 public:
@@ -109,12 +109,12 @@ protected:
     void keyPressEvent( QKeyEvent * key);
     void keyReleaseEvent( QKeyEvent * key);
     int mapKey(int k);
-    bool isPressed[8];	//{j k l i u o q a}
-    unsigned int lastRepeat[8];
+    bool isPressed[8];  //{j k l i u o q a}
+unsigned int lastRepeat[8];
 
 
 private:
-    Ui::tum_ardrone_guiClass ui;
+Ui::tum_ardrone_guiClass ui;
 };
 
 #endif /* __TUMARDRONEGUI_H */

@@ -1,5 +1,5 @@
 #pragma once
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -26,18 +26,18 @@
 class KIAutoInit : public KIProcedure
 {
 private:
-	enum {NONE, STARTED, WAIT_FOR_FIRST, TOOK_FIRST, WAIT_FOR_SECOND, DONE} stage;
-	int stageStarted;
-	bool nextUp;
-	bool resetMap;
-	int moveTimeMS;
-	int waitTimeMS;
-	int reachHeightMS;
-	float controlCommandMultiplier;
+    enum {NONE, STARTED, WAIT_FOR_FIRST, TOOK_FIRST, WAIT_FOR_SECOND, DONE} stage;
+    int stageStarted;
+    bool nextUp;
+    bool resetMap;
+    int moveTimeMS;
+    int waitTimeMS;
+    int reachHeightMS;
+    float controlCommandMultiplier;
 public:
-	KIAutoInit(bool resetMap = true, int imoveTimeMS=500, int iwaitTimeMS=800, int reachHeightMS=6000, float controlMult = 1.0, bool takeoff=true);
-	~KIAutoInit(void);
-	bool update(const tum_ardrone::filter_stateConstPtr statePtr);
+    KIAutoInit(bool resetMap = true, int imoveTimeMS=500, int iwaitTimeMS=800, int reachHeightMS=6000, float controlMult = 1.0, bool takeoff=true);
+    ~KIAutoInit(void);
+    bool update(const tum_ardrone::filter_stateConstPtr statePtr);
 };
 
 #endif /* __KIAUTOINIT_H */

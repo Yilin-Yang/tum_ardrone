@@ -1,5 +1,5 @@
 #pragma once
- /**
+/**
  *  This file is part of tum_ardrone.
  *
  *  Copyright 2012 Jakob Engel <jajuengel@gmail.com> (Technical University of Munich)
@@ -20,19 +20,19 @@
  */
 #ifndef __KILAND_H
 #define __KILAND_H
- 
- 
+
+
 
 #include "KIProcedure.h"
 
 class KILand : public KIProcedure
 {
 private:
-	bool fresh;
+    bool fresh;
 public:
-	KILand(void);
-	~KILand(void);
-	bool update(const tum_ardrone::filter_stateConstPtr statePtr);
+    KILand(void);
+    ~KILand(void);
+    bool update(const tum_ardrone::filter_stateConstPtr statePtr);
 };
 
 #endif /* __KILAND_H */
