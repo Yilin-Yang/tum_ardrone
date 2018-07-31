@@ -81,7 +81,7 @@ struct Meas
     int c; // The camera - called j in MVG
 
     inline bool operator<(const Meas &rhs) const
-    {  return(c<rhs.c ||(c==rhs.c && p < rhs.p)); }
+    {  return(c<rhs.c or(c==rhs.c and p < rhs.p)); }
 
     bool bBad;
 

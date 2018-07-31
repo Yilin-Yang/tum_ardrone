@@ -142,7 +142,7 @@ protected:
     // Radial distortion transformation factor: returns ration of distorted / undistorted radius.
     inline double rtrans_factor(double r)
     {
-        if(r < 0.001 || mdW == 0.0)
+        if (r < 0.001 or mdW == 0.0)
             return 1.0;
         else
             return (mdWinv* atan(r * md2Tan) / r);
@@ -151,7 +151,7 @@ protected:
     // Inverse radial distortion: returns un-distorted radius from distorted.
     inline double invrtrans(double r)
     {
-        if(mdW == 0.0)
+        if (mdW == 0.0)
             return r;
         return(tan(r * mdW) * mdOneOver2Tan);
     };

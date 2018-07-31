@@ -81,7 +81,7 @@ void RosThread::velCb(const geometry_msgs::TwistConstPtr vel)
 void RosThread::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr)
 {
 
-    if(navdataCount%10==0)
+    if (navdataCount%10==0)
     {
         char buf[200];
         snprintf(buf,200,"Motors: %f %f %f %f",
@@ -108,12 +108,12 @@ void RosThread::joyCb(const sensor_msgs::JoyConstPtr joy_msg)
 
     // if not controlling: start controlling if sth. is pressed (!)
     bool justStartedControlling = false;
-    if(gui->currentControlSource != CONTROL_JOY)
+    if (gui->currentControlSource != CONTROL_JOY)
     {
-        if(     joy_msg->axes[0] > 0.1 ||  joy_msg->axes[0] < -0.1 ||
-                joy_msg->axes[1] > 0.1 ||  joy_msg->axes[1] < -0.1 ||
-                joy_msg->axes[2] > 0.1 ||  joy_msg->axes[2] < -0.1 ||
-                joy_msg->axes[3] > 0.1 ||  joy_msg->axes[3] < -0.1 ||
+        if (     joy_msg->axes[0] > 0.1 or  joy_msg->axes[0] < -0.1 ||
+                joy_msg->axes[1] > 0.1 or  joy_msg->axes[1] < -0.1 ||
+                joy_msg->axes[2] > 0.1 or  joy_msg->axes[2] < -0.1 ||
+                joy_msg->axes[3] > 0.1 or  joy_msg->axes[3] < -0.1 ||
                 joy_msg->buttons.at(actiavte_index))
         {
             gui->setControlSource(CONTROL_JOY);
@@ -122,7 +122,7 @@ void RosThread::joyCb(const sensor_msgs::JoyConstPtr joy_msg)
     }
 
     // are we actually controlling with the Joystick?
-    if(justStartedControlling || gui->currentControlSource == CONTROL_JOY)
+    if (justStartedControlling or gui->currentControlSource == CONTROL_JOY)
     {
         ControlCommand c;
         c.yaw = -joy_msg->axes[2];
@@ -133,12 +133,12 @@ void RosThread::joyCb(const sensor_msgs::JoyConstPtr joy_msg)
         sendControlToDrone(c);
         lastJoyControlSent = c;
 
-        if(!lastL1Pressed && joy_msg->buttons.at(actiavte_index - 1))
+        if (!lastL1Pressed and joy_msg->buttons.at(actiavte_index - 1))
             sendTakeoff();
-        if(lastL1Pressed && !joy_msg->buttons.at(actiavte_index - 1))
+        if (lastL1Pressed and !joy_msg->buttons.at(actiavte_index - 1))
             sendLand();
 
-        if(!lastR1Pressed && joy_msg->buttons.at(actiavte_index))
+        if (!lastR1Pressed and joy_msg->buttons.at(actiavte_index))
             sendToggleState();
 
     }
@@ -149,15 +149,15 @@ void RosThread::joyCb(const sensor_msgs::JoyConstPtr joy_msg)
 
 void RosThread::comCb(const std_msgs::StringConstPtr str)
 {
-    if(str->data.substr(0,2) == "u ")
+    if (str->data.substr(0,2) == "u ")
     {
-        if(str->data.substr(0,4) == "u l ")
+        if (str->data.substr(0,4) == "u l ")
             gui->addLogLine(str->data.substr(4,str->data.length()-4));
 
-        else if(str->data.substr(0,4) == "u c ")
+        else if (str->data.substr(0,4) == "u c ")
             gui->setAutopilotInfo(str->data.substr(4,str->data.length()-4));
 
-        else if(str->data.substr(0,4) == "u s ")
+        else if (str->data.substr(0,4) == "u s ")
             gui->setStateestimationInfo(str->data.substr(4,str->data.length()-4));
     }
 }
@@ -190,15 +190,15 @@ void RosThread::run()
 
     ros::Time last = ros::Time::now();
     ros::Time lastHz = ros::Time::now();
-    while(keepRunning && nh_.ok())
+    while (keepRunning and nh_.ok())
     {
         // spin for 100ms
-        while((ros::Time::now() - last) < ros::Duration(0.1))
+        while ((ros::Time::now() - last) < ros::Duration(0.1))
             ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1 - (ros::Time::now() - last).toSec()));
         last = ros::Time::now();
 
         // if nothing on /cmd_vel, repeat!
-        if(velCount100ms == 0)
+        if (velCount100ms == 0)
             switch(gui->currentControlSource)
             {
             case CONTROL_AUTO:
@@ -217,7 +217,7 @@ void RosThread::run()
         velCount100ms = 0;
 
         // if 1s passed: update Hz values
-        if((ros::Time::now() - lastHz) > ros::Duration(1.0))
+        if ((ros::Time::now() - lastHz) > ros::Duration(1.0))
         {
             gui->setCounts(navdataCount, velCount, dronePoseCount, joyCount);
             navdataCount = velCount = dronePoseCount = joyCount = 0;
@@ -226,7 +226,7 @@ void RosThread::run()
     }
 
     gui->closeWindow();
-    if(nh_.ok()) ros::shutdown();
+    if (nh_.ok()) ros::shutdown();
     std::cout << "Exiting ROS Thread (ros::shutdown() has been called)" << std::endl;
 }
 

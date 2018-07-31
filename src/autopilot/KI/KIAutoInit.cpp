@@ -36,11 +36,11 @@ KIAutoInit::KIAutoInit(bool resetMap, int imoveTimeMS, int iwaitTimeMS, int reac
     nextUp = false;
     stageStarted = false;
 
-    if(!takeoff)
+    if (!takeoff)
         stage = WAIT_FOR_FIRST;
 
     char buf[200];
-    if(resetMap)
+    if (resetMap)
         snprintf(buf,200,"autoInit %d %d", imoveTimeMS, iwaitTimeMS);
     else
         snprintf(buf,200,"takeoff");
@@ -57,7 +57,7 @@ KIAutoInit::~KIAutoInit(void)
 bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
 {
     // no PTAM initialization, just takeoff.
-    if(!resetMap)
+    if (!resetMap)
     {
         switch(stage)
         {
@@ -69,7 +69,7 @@ bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
             return false;
 
         case WAIT_FOR_SECOND:
-            if(getMS() - stageStarted < 5000)
+            if (getMS() - stageStarted < 5000)
             {
                 node->sendControlToDrone(node->hoverCommand);
                 return false;
@@ -103,7 +103,7 @@ bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
             return false;
 
         case STARTED:   // wait 6s to reach hight.
-            if(getMS() - stageStarted > reachHeightMS)
+            if (getMS() - stageStarted > reachHeightMS)
             {
                 stageStarted = getMS();
                 stage = WAIT_FOR_FIRST;
@@ -112,7 +112,7 @@ bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
             return false;
 
         case WAIT_FOR_FIRST:    // wait 1s and press space
-            if(getMS() - stageStarted > 1000)
+            if (getMS() - stageStarted > 1000)
             {
                 node->publishCommand("p space");
                 stageStarted = getMS();
@@ -122,20 +122,20 @@ bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
             return false;
 
         case TOOK_FIRST:    // go [up/down] 1s and press space if was initializing.
-            if(getMS() - stageStarted < moveTimeMS)
+            if (getMS() - stageStarted < moveTimeMS)
             {
-                if(nextUp)
+                if (nextUp)
                     node->sendControlToDrone(ControlCommand(0,0,0,0.6*controlCommandMultiplier));
                 else
                     node->sendControlToDrone(ControlCommand(0,0,0,-0.3*controlCommandMultiplier));
             }
-            else if(getMS() - stageStarted < moveTimeMS+waitTimeMS)
+            else if (getMS() - stageStarted < moveTimeMS+waitTimeMS)
             {
                 node->sendControlToDrone(node->hoverCommand);
             }
             else    // time is up, take second KF
             {
-                if(statePtr->ptamState == statePtr->PTAM_INITIALIZING)  // TODO: ptam status enum, this should be PTAM_INITIALIZING
+                if (statePtr->ptamState == statePtr->PTAM_INITIALIZING)  // TODO: ptam status enum, this should be PTAM_INITIALIZING
                 {
                     node->publishCommand("p space");
                     stageStarted = getMS();
@@ -155,7 +155,7 @@ bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
         case WAIT_FOR_SECOND:
 
             // am i done?
-            if(statePtr->ptamState == statePtr->PTAM_BEST || statePtr->ptamState == statePtr->PTAM_GOOD || statePtr->ptamState == statePtr->PTAM_TOOKKF) // TODO: PTAM_GOOD or PTAM_BEST or PTAM_TOOKKF
+            if (statePtr->ptamState == statePtr->PTAM_BEST or statePtr->ptamState == statePtr->PTAM_GOOD || statePtr->ptamState == statePtr->PTAM_TOOKKF) // TODO: PTAM_GOOD or PTAM_BEST or PTAM_TOOKKF
             {
                 controller->setTarget(DronePosition(
                         TooN::makeVector(statePtr->x,statePtr->y,statePtr->z),statePtr->yaw));
@@ -166,7 +166,7 @@ bool KIAutoInit::update(const tum_ardrone::filter_stateConstPtr statePtr)
 
             // am i stil waiting?
             // TODO: change this to something that becomes false, as soon as fail is evident.
-            if(getMS() - stageStarted < 2500)   // wait 2s
+            if (getMS() - stageStarted < 2500)   // wait 2s
             {
                 node->sendControlToDrone(node->hoverCommand);
                 return false;

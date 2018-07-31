@@ -77,7 +77,7 @@ void MapView::run()
     myGLWindow = new GLWindow2(CVD::ImageRef(640,480), "PTAM Drone Map View",this);
     myGLWindow->set_title("PTAM Drone Map View");
 
-    while(keepRunning)
+    while (keepRunning)
     {
         Render();
         usleep(30000);  // TODO: some more advanced than just render at 33fps
@@ -98,7 +98,7 @@ void MapView::Render()
 
 
 
-    if(clearTrail)
+    if (clearTrail)
     {
         trailPoints.clear();
         clearTrail = false;
@@ -106,7 +106,7 @@ void MapView::Render()
 
     // render
     bool addTrail;
-    if(trailPoints.size() == 0)
+    if (trailPoints.size() == 0)
         addTrail = true;
     else
     {
@@ -120,13 +120,13 @@ void MapView::Render()
 
 
     // the following complicated code is to save trail-points in ptam-scale, such that scale-reestimation will re-scale the drawn path.
-    if(addTrail)
+    if (addTrail)
     {
-        if(ptamWrapper->PTAMStatus == ptamWrapper->PTAM_BEST ||
-           ptamWrapper->PTAMStatus == ptamWrapper->PTAM_TOOKKF ||
+        if (ptamWrapper->PTAMStatus == ptamWrapper->PTAM_BEST or
+           ptamWrapper->PTAMStatus == ptamWrapper->PTAM_TOOKKF or
            ptamWrapper->PTAMStatus == ptamWrapper->PTAM_GOOD)
         {
-            if(ptamWrapper->PTAMInitializedClock != 0 && getMS() - ptamWrapper->PTAMInitializedClock > 200)
+            if (ptamWrapper->PTAMInitializedClock != 0 and getMS() - ptamWrapper->PTAMInitializedClock > 200)
             {
                 TooN::Vector<3> PTAMScales = filter->getCurrentScales();
                 TooN::Vector<3> PTAMOffsets = filter->getCurrentOffsets().slice<0,3>();
@@ -141,10 +141,10 @@ void MapView::Render()
                 ));
             }
         }
-        else if(ptamWrapper->PTAMStatus == ptamWrapper->PTAM_LOST ||
+        else if (ptamWrapper->PTAMStatus == ptamWrapper->PTAM_LOST or
                 ptamWrapper->PTAMStatus == ptamWrapper->PTAM_FALSEPOSITIVE)
         {
-            if(ptamWrapper->PTAMInitializedClock != 0 && getMS() - ptamWrapper->PTAMInitializedClock > 200)
+            if (ptamWrapper->PTAMInitializedClock != 0 and getMS() - ptamWrapper->PTAMInitializedClock > 200)
             {
                 TooN::Vector<3> PTAMScales = filter->getCurrentScales();
                 TooN::Vector<3> PTAMOffsets = filter->getCurrentOffsets().slice<0,3>();
@@ -171,7 +171,7 @@ void MapView::Render()
 
 
 
-    if(resetMapViewFlag)
+    if (resetMapViewFlag)
     {
         resetMapView();
         resetMapViewFlag = false;
@@ -188,7 +188,7 @@ void MapView::Render()
     std::vector<tse3>* kfl = &(ptamWrapper->keyFramesTransformed);
 
     // draw keyframes
-    for(unsigned int i=0;i<kfl->size();i++)
+    for (unsigned int i=0;i<kfl->size();i++)
     {
         plotCam((*kfl)[i],false,2,0.04f,1);
     }
@@ -214,7 +214,7 @@ void MapView::Render()
     TooN::Vector<3> sc = filter->getCurrentScales();
 
 
-    if(drawUI == UI_DEBUG)
+    if (drawUI == UI_DEBUG)
     {
         snprintf(charBuf,1000,"Pose:              ");
         snprintf(charBuf+10,800, "x: %.2f                          ",lastFramePoseSpeed[0]);
@@ -274,10 +274,10 @@ void MapView::Render()
 
 
     CVD::glSetFont("sans");
-    if(drawUI != UI_NONE)
+    if (drawUI != UI_NONE)
         myGLWindow->DrawCaption(msg);
 
-    if(drawUI == UI_DEBUG)
+    if (drawUI == UI_DEBUG)
     {
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
@@ -312,9 +312,9 @@ void MapView::drawTrail()
     TooN::Vector<3> PTAMScales = filter->getCurrentScales();
     TooN::Vector<3> PTAMOffsets = filter->getCurrentOffsets().slice<0,3>();
 
-    for(unsigned int i=1;i<trailPoints.size();i++)
+    for (unsigned int i=1;i<trailPoints.size();i++)
     {
-        if(trailPoints[i].PTAMValid)
+        if (trailPoints[i].PTAMValid)
         {
             trailPoints[i].pointFilter = trailPoints[i].pointPTAM;
             trailPoints[i].pointFilter[0] *= PTAMScales[0];
@@ -322,7 +322,7 @@ void MapView::drawTrail()
             trailPoints[i].pointFilter[2] *= PTAMScales[2];
             trailPoints[i].pointFilter += PTAMOffsets;
         }
-        if(i > 1 && i < trailPoints.size()-1)
+        if (i > 1 and i < trailPoints.size()-1)
             glVertex3f((float)trailPoints[i].pointFilter[0], (float)trailPoints[i].pointFilter[1], (float)trailPoints[i].pointFilter[2]);
         glVertex3f((float)trailPoints[i].pointFilter[0], (float)trailPoints[i].pointFilter[1], (float)trailPoints[i].pointFilter[2]);
     }
@@ -356,7 +356,7 @@ void MapView::plotMapPoints()
 
     std::vector<tvec3>* mpl = &(ptamWrapper->mapPointsTransformed);
 
-    for(unsigned int i=0;i<mpl->size();i++)
+    for (unsigned int i=0;i<mpl->size();i++)
     {
         TooN::Vector<3> pos = (*mpl)[i];
 
@@ -391,7 +391,7 @@ void MapView::plotCam(TooN::SE3<> droneToGlobal, bool xyCross, float thick, floa
 
     glLineWidth(thick*lineWidthFactor);
 
-    if(alpha < 1)
+    if (alpha < 1)
     {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -417,7 +417,7 @@ void MapView::plotCam(TooN::SE3<> droneToGlobal, bool xyCross, float thick, floa
     glEnd();
 
 
-    if(xyCross)
+    if (xyCross)
     {
         glLineWidth(1*lineWidthFactor);
         glColor4f(1,1,1, alpha);
@@ -477,18 +477,18 @@ void MapView::plotGrid()
 
     // fine grid
     glBegin(GL_LINES);
-    for(double x=-gridSmallMax; x<=gridSmallMax;x+=gridSmallSpacing)
+    for (double x=-gridSmallMax; x<=gridSmallMax;x+=gridSmallSpacing)
     {
-        if(x != 0 && (x-floor(x)) > 0.1)
+        if (x != 0 and (x-floor(x)) > 0.1)
         {
             glColor3f(0.2f,0.2f,0.2f);
             glVertex3d(x, -gridSmallMax, 0.0);
             glVertex3d(x, gridSmallMax, 0.0);
         }
     }
-    for(double y=-gridSmallMax; y<=gridSmallMax;y+=gridSmallSpacing)
+    for (double y=-gridSmallMax; y<=gridSmallMax;y+=gridSmallSpacing)
     {
-        if(y != 0 && (y-floor(y)) > 0.1)
+        if (y != 0 and (y-floor(y)) > 0.1)
         {
             glColor3f(0.25f,0.25f,0.25f);
             glVertex3d(-gridSmallMax,y, 0.0);
@@ -501,18 +501,18 @@ void MapView::plotGrid()
     //big grid
     glLineWidth(2*lineWidthFactor);
     glBegin(GL_LINES);
-    for(double x=-gridBigMax; x<=gridBigMax;x+=gridBigSpacing)
+    for (double x=-gridBigMax; x<=gridBigMax;x+=gridBigSpacing)
     {
-        if(x != 0)
+        if (x != 0)
         {
             glColor3f(0.6f,0.6f,0.6f);
             glVertex3d(x, -gridBigMax, 0.0);
             glVertex3d(x, gridBigMax, 0.0);
         }
     }
-    for(double y=-gridBigMax; y<=gridBigMax;y+=gridBigSpacing)
+    for (double y=-gridBigMax; y<=gridBigMax;y+=gridBigSpacing)
     {
-        if(y != 0)
+        if (y != 0)
         {
             glColor3f(0.6f,0.6f,0.6f);
             glVertex3d(-gridBigMax,y, 0.0);
@@ -568,23 +568,23 @@ void MapView::SetupModelView(TooN::SE3<> se3WorldFromCurrent)
 
 void MapView::on_key_down(int key)
 {
-    if(key == 114) // r
+    if (key == 114) // r
     {
         node->publishCommand("f reset");
     }
-    if(key == 117) // u
+    if (key == 117) // u
     {
         node->publishCommand("m toggleUI");
     }
-    if(key == 118)  // v
+    if (key == 118)  // v
     {
         node->publishCommand("m resetView");
     }
-    if(key == 108) // l
+    if (key == 108) // l
     {
         node->publishCommand("toggleLog");
     }
-    if(key == 116) // t
+    if (key == 116) // t
     {
         node->publishCommand("m clearTrail");
     }
@@ -595,23 +595,23 @@ void MapView::on_key_down(int key)
 // called by external thread, so watch sync.
 bool MapView::handleCommand(std::string s)
 {
-    if(s.length() == 8 && s.substr(0,8) == "toggleUI")
+    if (s.length() == 8 and s.substr(0,8) == "toggleUI")
     {
-        if(drawUI == UI_NONE) drawUI = UI_DEBUG;
-        else if(drawUI == UI_DEBUG) drawUI = UI_PRES;
-        else if(drawUI == UI_PRES) drawUI = UI_NONE;
+        if (drawUI == UI_NONE) drawUI = UI_DEBUG;
+        else if (drawUI == UI_DEBUG) drawUI = UI_PRES;
+        else if (drawUI == UI_PRES) drawUI = UI_NONE;
     }
-    if(s.length() == 9 && s.substr(0,9) == "resetView")
+    if (s.length() == 9 and s.substr(0,9) == "resetView")
     {
         resetMapViewFlag = true;
     }
-    if(s.length() == 10 && s.substr(0,10) == "clearTrail")
+    if (s.length() == 10 and s.substr(0,10) == "clearTrail")
     {
         clearTrail = true;
     }
     // f reset:
     // resets filter pos and PTAM.
-    if(s.length() == 5 && s.substr(0,5) == "reset")
+    if (s.length() == 5 and s.substr(0,5) == "reset")
     {
         filter->reset();
         ptamWrapper->Reset();

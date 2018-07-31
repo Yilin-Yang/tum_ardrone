@@ -49,16 +49,16 @@ struct TrackerData
     {
         bInImage = bPotentiallyVisible = false;
         v3Cam = se3CFromW * Point.v3WorldPos;
-        if(v3Cam[2] < 0.001)
+        if (v3Cam[2] < 0.001)
             return;
         v2ImPlane = project(v3Cam);
-        if(v2ImPlane*v2ImPlane > Cam.LargestRadiusInImage() * Cam.LargestRadiusInImage())
+        if (v2ImPlane*v2ImPlane > Cam.LargestRadiusInImage() * Cam.LargestRadiusInImage())
             return;
         v2Image = Cam.Project(v2ImPlane);
-        if(Cam.Invalid())
+        if (Cam.Invalid())
             return;
 
-        if(v2Image[0] < 0 || v2Image[1] < 0 || v2Image[0] > irImageSize[0] || v2Image[1] > irImageSize[1])
+        if (v2Image[0] < 0 or v2Image[1] < 0 || v2Image[0] > irImageSize[0] || v2Image[1] > irImageSize[1])
             return;
         bInImage = true;
     }
@@ -76,7 +76,7 @@ struct TrackerData
     inline void ProjectAndDerivs(SE3<> &se3, ATANCamera &Cam)
     {
         Project(se3, Cam);
-        if(bFound)
+        if (bFound)
             GetDerivsUnsafe(Cam);
     }
 
@@ -86,7 +86,7 @@ struct TrackerData
     inline void CalcJacobian()
     {
         double dOneOverCameraZ = 1.0 / v3Cam[2];
-        for(int m=0; m<6; m++)
+        for (int m=0; m<6; m++)
         {
             const Vector<4> v4Motion = SE3<>::generator_field(m, unproject(v3Cam));
             Vector<2> v2CamFrameMotion;

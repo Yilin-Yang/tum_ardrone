@@ -36,7 +36,7 @@ KILand::~KILand(void)
 
 bool KILand::update(const tum_ardrone::filter_stateConstPtr statePtr)
 {
-    if(fresh)
+    if (fresh)
     {
         node->sendLand();
         printf("issuing land!\n");

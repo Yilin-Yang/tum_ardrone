@@ -44,8 +44,8 @@ DroneController::~DroneController(void)
 
 double angleFromTo2(double angle, double min, double sup)
 {
-    while(angle < min) angle += 360;
-    while(angle >=  sup) angle -= 360;
+    while (angle < min) angle += 360;
+    while (angle >=  sup) angle -= 360;
     return angle;
 }
 
@@ -56,7 +56,7 @@ ControlCommand DroneController::update(tum_ardrone::filter_stateConstPtr state)
     TooN::Vector<3> pose = TooN::makeVector(state->x, state->y, state->z);
     double yaw = state->yaw;
     TooN::Vector<4> speeds = TooN::makeVector(state->dx, state->dy, state->dz, state->dyaw);
-    ptamIsGood = state->ptamState == state->PTAM_BEST || state->ptamState == state->PTAM_GOOD || state->ptamState == state->PTAM_TOOKKF;
+    ptamIsGood = state->ptamState == state->PTAM_BEST or state->ptamState == state->PTAM_GOOD || state->ptamState == state->PTAM_TOOKKF;
     scaleAccuracy = state->scaleAccuracy;
 
     // calculate (new) errors.
@@ -72,7 +72,7 @@ ControlCommand DroneController::update(tum_ardrone::filter_stateConstPtr state)
     new_err[3] = angleFromTo2(new_err[3],-180,180);
     TooN::Vector<4> d_err = TooN::makeVector(-speeds[0], -speeds[1], -speeds[2], -speeds[3]);
 
-    if(targetValid)
+    if (targetValid)
         calcControl(new_err, d_err, yaw);
     else
     {
@@ -98,7 +98,7 @@ void DroneController::setTarget(DronePosition newTarget)
     snprintf(buf,200,"New Target: xyz = %.3f, %.3f, %.3f,  yaw=%.3f", target.pos[0],target.pos[1],target.pos[2],target.yaw);
     ROS_INFO(buf);
 
-    if(node != NULL)
+    if (node != NULL)
         node->publishCommand(std::string("u l ") + buf);
 }
 
@@ -115,21 +115,21 @@ void DroneController::clearTarget()
 
 void i_term_increase(double& i_term, double new_err, double cap)
 {
-    if(new_err < 0 && i_term > 0)
+    if (new_err < 0 and i_term > 0)
         i_term = std::max(0.0, i_term + 2.5 * new_err);
-    else if(new_err > 0 && i_term < 0)
+    else if (new_err > 0 and i_term < 0)
         i_term = std::min(0.0, i_term + 2.5 * new_err);
     else
         i_term += new_err;
 
-    if(i_term > cap) i_term =  cap;
-    if(i_term < -cap) i_term =  -cap;
+    if (i_term > cap) i_term =  cap;
+    if (i_term < -cap) i_term =  -cap;
 }
 
 void DroneController::calcControl(TooN::Vector<4> new_err, TooN::Vector<4> d_error, double yaw)
 {
     float agr = agressiveness;
-    if(!ptamIsGood) agr *= 0.75;
+    if (!ptamIsGood) agr *= 0.75;
     agr *= scaleAccuracy;
 
     //TooN::Vector<4> d_term = new_err - last_err;  // d-term:just differentiate
@@ -153,8 +153,8 @@ void DroneController::calcControl(TooN::Vector<4> new_err, TooN::Vector<4> d_err
 
     // kill integral term when first crossing target
     // that is, thargetNew is set, it was set at least 100ms ago, and err changed sign.
-    for(int i=0;i<4;i++)
-        if(targetNew[i] > 0.5 && getMS()/1000.0 - targetSetAtClock > 0.1 && last_err[i] * new_err[i] < 0)
+    for (int i=0;i<4;i++)
+        if (targetNew[i] > 0.5 and getMS()/1000.0 - targetSetAtClock > 0.1 && last_err[i] * new_err[i] < 0)
         {
             i_term[i] = 0; targetNew[i] = 0;
         }
@@ -187,24 +187,24 @@ void DroneController::calcControl(TooN::Vector<4> new_err, TooN::Vector<4> d_err
     float rp_mod_cut2 = 0.0;
     float rp_mod_exp = 2;
 
-    if(cX_p <  rp_mod_cut1 && cX_p > 0)
+    if (cX_p <  rp_mod_cut1 and cX_p > 0)
     cX_p = pow((float)cX_p,rp_mod_exp) / pow(rp_mod_cut1,rp_mod_exp-1);
-    else if(cX_p <  rp_mod_cut2 && cX_p > 0)
+    else if (cX_p <  rp_mod_cut2 and cX_p > 0)
     cX_p = rp_mod_cut1 + pow((float)cX_p-rp_mod_cut1,1/rp_mod_exp) / pow(rp_mod_cut2-rp_mod_cut1,1/rp_mod_exp-1);
 
-    if(cX_p > - rp_mod_cut1 && cX_p < 0)
+    if (cX_p > - rp_mod_cut1 and cX_p < 0)
     cX_p = - pow(-(float)cX_p,rp_mod_exp) / pow(rp_mod_cut1,rp_mod_exp-1);
-    else if(cX_p >  - rp_mod_cut2 && cX_p < 0)
+    else if (cX_p >  - rp_mod_cut2 and cX_p < 0)
     cX_p = - (rp_mod_cut1 + pow(-(float)cX_p-rp_mod_cut1,1/rp_mod_exp) / pow(rp_mod_cut2-rp_mod_cut1,1/rp_mod_exp-1));
 
-    if(cY_p <  rp_mod_cut1 && cY_p > 0)
+    if (cY_p <  rp_mod_cut1 and cY_p > 0)
     cY_p = pow((float)cY_p,rp_mod_exp) / pow(rp_mod_cut1,rp_mod_exp-1);
-    else if(cY_p <  rp_mod_cut2 && cY_p > 0)
+    else if (cY_p <  rp_mod_cut2 and cY_p > 0)
     cY_p = rp_mod_cut1 + pow((float)cY_p-rp_mod_cut1,1/rp_mod_exp) / pow(rp_mod_cut2-rp_mod_cut1,1/rp_mod_exp-1);
 
-    if(cY_p > - rp_mod_cut1 && cY_p < 0)
+    if (cY_p > - rp_mod_cut1 and cY_p < 0)
     cY_p = - pow(-(float)cY_p,rp_mod_exp) / pow(rp_mod_cut1,rp_mod_exp-1);
-    else if(cY_p >  - rp_mod_cut2 && cY_p < 0)
+    else if (cY_p >  - rp_mod_cut2 and cY_p < 0)
     cY_p = - (rp_mod_cut1 + pow(-(float)cY_p-rp_mod_cut1,1/rp_mod_exp) / pow(rp_mod_cut2-rp_mod_cut1,1/rp_mod_exp-1));
     */
 
@@ -223,7 +223,7 @@ void DroneController::calcControl(TooN::Vector<4> new_err, TooN::Vector<4> d_err
 
 
     lastSentControl.gaz = std::min(max_gaz_rise/rise_fac,std::max(max_gaz_drop, gazP + gazD + gazI));
-    if(lastSentControl.gaz > 0) lastSentControl.gaz *= rise_fac;
+    if (lastSentControl.gaz > 0) lastSentControl.gaz *= rise_fac;
 
     logInfo = TooN::makeVector(
         Kp_rp * p_term[0], Kp_rp * p_term[1], gazP, Kp_yaw * p_term[3],

@@ -64,10 +64,10 @@ double parsePingResult(std::string s)
     int pos = s.find("time=");
     int found = 0;
     float ms;
-    if(pos != std::string::npos)
+    if (pos != std::string::npos)
         found = sscanf(s.substr(pos).c_str(),"time=%f",&ms);
 
-    if(found == 1 && pos != std::string::npos)
+    if (found == 1 and pos != std::string::npos)
         return ms;
     else
         return 10000;
@@ -82,9 +82,9 @@ void PingThread::run()
     ros::Rate r(2.0);
     FILE *p;
 
-    while(keepRunning)
+    while (keepRunning)
     {
-        if(measure)
+        if (measure)
         {
             // ping twice, with a sleep in between
             p = popen(pingCommand500,"r");
@@ -94,9 +94,9 @@ void PingThread::run()
 
             // sleep 1s
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
 
 
 
@@ -122,30 +122,30 @@ void PingThread::run()
 
             // send
             snprintf(line1,200,"pings %d %d", (int)p500, (int)p20000);
-            if(rosThread != NULL) rosThread->publishCommand(line1);
-            if(gui != NULL) gui->setPings((int)p500, (int)p20000);
+            if (rosThread != NULL) rosThread->publishCommand(line1);
+            if (gui != NULL) gui->setPings((int)p500, (int)p20000);
 
             // sleep 1s
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
         }
         else
         {
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
             r.sleep();
-            if(!keepRunning) break;
+            if (!keepRunning) break;
 
             // send
             snprintf(line1,200,"pings %d %d", (int)p500Default, (int)p20000Default);
-            if(rosThread != NULL) rosThread->publishCommand(line1);
-            if(gui != NULL) gui->setPings((int)p500Default, (int)p20000Default);
+            if (rosThread != NULL) rosThread->publishCommand(line1);
+            if (gui != NULL) gui->setPings((int)p500Default, (int)p20000Default);
         }
     }
 

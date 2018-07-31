@@ -72,8 +72,8 @@ using namespace std;
 // transform degree-angle to satisfy min <= angle < sup
 double angleFromTo(double angle, double min, double sup)
 {
-    while(angle <  min) angle += 360;
-    while(angle >= sup) angle -= 360;
+    while (angle <  min) angle += 360;
+    while (angle >= sup) angle -= 360;
     return angle;
 }
 
@@ -550,7 +550,7 @@ void DroneKalmanFilter::flushScalePairs()
 {
     ofstream* fle = new ofstream();
     fle->open ("scalePairs.txt");
-    for(unsigned int i=0;i<scalePairs->size();i++)
+    for (unsigned int i=0;i<scalePairs->size();i++)
         (*fle) << (*scalePairs)[i].ptam[0] << " " <<(*scalePairs)[i].ptam[1] << " " <<(*scalePairs)[i].ptam[2] << " " <<
         (*scalePairs)[i].imu[0] << " " << (*scalePairs)[i].imu[1] << " " << (*scalePairs)[i].imu[2] << endl;
     fle->flush();
@@ -601,7 +601,7 @@ void DroneKalmanFilter::updateScaleXYZ(TooN::Vector<3> ptamDiff, TooN::Vector<3>
 
     int numIn = 0;
     int numOut = 0;
-    for(unsigned int i=0;i<(*scalePairs).size();i++)
+    for (unsigned int i=0;i<(*scalePairs).size();i++)
     {
         if ((*scalePairs).size() < 5 or ((*scalePairs)[i].alphaSingleEstimate > median * 0.2 and (*scalePairs)[i].alphaSingleEstimate < median / 0.2))
         {
@@ -712,7 +712,7 @@ void DroneKalmanFilter::predictUpTo(int timestamp, bool consume, bool useControl
     // for both others, thi is the first package with a stamp bigger than what it should be.
     // if consume, delete everything before permanently.
     deque<geometry_msgs::TwistStamped>::iterator controlIterator = velQueue->begin();
-    while(controlIterator != velQueue->end() and
+    while (controlIterator != velQueue->end() and
           controlIterator+1 != velQueue->end() and
           getMS((controlIterator+1)->header.stamp) <= predictdUpToTimestamp - delayControl)
         if (consume)
@@ -726,12 +726,12 @@ void DroneKalmanFilter::predictUpTo(int timestamp, bool consume, bool useControl
 
     // dont delete here, it will be deleted if respective rpy data is consumed.
     deque<ardrone_autonomy::Navdata>::iterator xyzIterator = navdataQueue->begin();
-    while(xyzIterator != navdataQueue->end() and
+    while (xyzIterator != navdataQueue->end() and
           getMS(xyzIterator->header.stamp) <= predictdUpToTimestamp + delayXYZ)
         xyzIterator++;
 
     deque<ardrone_autonomy::Navdata>::iterator rpyIterator = navdataQueue->begin();
-    while(rpyIterator != navdataQueue->end() and
+    while (rpyIterator != navdataQueue->end() and
           getMS(rpyIterator->header.stamp) <= predictdUpToTimestamp + delayRPY)
         if (consume)
         {
@@ -743,7 +743,7 @@ void DroneKalmanFilter::predictUpTo(int timestamp, bool consume, bool useControl
 
     // now, each iterator points to the first elemnent in queue that is to be integrated.
     // start predicting,
-    while(true)
+    while (true)
     {
         // predict ahead to [timestamp]
         int predictTo = timestamp;
@@ -753,14 +753,14 @@ void DroneKalmanFilter::predictUpTo(int timestamp, bool consume, bool useControl
 
         // get three queues to the right point in time by rolling forward in them.
         // for xyz this is the first point at which its obs-time is bigger than or equal to [predictdUpToTimestamp]
-        while(xyzIterator != navdataQueue->end() and
+        while (xyzIterator != navdataQueue->end() and
               getMS(xyzIterator->header.stamp) - delayXYZ < predictdUpToTimestamp)
             xyzIterator++;
-        while(rpyIterator != navdataQueue->end() and
+        while (rpyIterator != navdataQueue->end() and
               getMS(rpyIterator->header.stamp) - delayRPY < predictdUpToTimestamp)
             rpyIterator++;
         // for control that is last message with stamp <= predictdUpToTimestamp - delayControl.
-        while(controlIterator != velQueue->end() and
+        while (controlIterator != velQueue->end() and
               controlIterator+1 != velQueue->end() and
               getMS((controlIterator+1)->header.stamp) + delayControl <= predictdUpToTimestamp)
             controlIterator++;

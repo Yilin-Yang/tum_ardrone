@@ -64,7 +64,7 @@ EstimationNode::EstimationNode()
     predTime = ros::Duration(25*0.001);
 
     ros::param::get("~publishFreq", val);
-    if(val.size()>0)
+    if (val.size()>0)
         sscanf(val.c_str(), "%f", &valFloat);
     else
         valFloat = 30;
@@ -74,7 +74,7 @@ EstimationNode::EstimationNode()
 
 
     ros::param::get("~calibFile", calibFile);
-    if(calibFile.size()>0)
+    if (calibFile.size()>0)
         cout << "set calibFile to " << calibFile << endl;
     else
         cout << "set calibFile to DEFAULT" << endl;
@@ -120,10 +120,10 @@ EstimationNode::~EstimationNode()
 void EstimationNode::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr)
 {
     lastNavdataReceived = *navdataPtr;
-    if(ros::Time::now() - lastNavdataReceived.header.stamp > ros::Duration(30.0))
+    if (ros::Time::now() - lastNavdataReceived.header.stamp > ros::Duration(30.0))
         lastNavdataReceived.header.stamp = ros::Time::now();
 
-    if(arDroneVersion == 0)
+    if (arDroneVersion == 0)
     {
         arDroneVersion = (navdataPtr->pressure == 0) ? 1 : 2;
         std::cout <<"Found ARDrone Version " << arDroneVersion << std::endl;
@@ -137,9 +137,9 @@ void EstimationNode::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPt
     long rosTS = getMS(lastNavdataReceived.header.stamp);
     long droneTS = navdataPtr->tm / 1000;
 
-    if(lastDroneTS == 0) lastDroneTS = droneTS;
+    if (lastDroneTS == 0) lastDroneTS = droneTS;
 
-    if((droneTS+1000000) < lastDroneTS)
+    if ((droneTS+1000000) < lastDroneTS)
     {
         droneRosTSOffset = rosTS - droneTS; // timestamp-overflow, reset running average.
         ROS_WARN("Drone Navdata timestamp overflow! (should happen epprox every 30min, while drone switched on)");
@@ -175,16 +175,16 @@ void EstimationNode::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPt
 
 
     // save last timestamp
-    if(lastNavStamp != ros::Time(0) && (lastNavdataReceived.header.stamp - lastNavStamp > ros::Duration(0.1)))
+    if (lastNavStamp != ros::Time(0) and (lastNavdataReceived.header.stamp - lastNavStamp > ros::Duration(0.1)))
         std::cout << (lastNavdataReceived.header.stamp - lastNavStamp).toSec() << "s between two consecutive navinfos. This system requires Navinfo at 200Hz. If this error persists, set drone to debug mode and change publish freq in ardrone_autonomy" << std::endl;
     lastNavStamp = lastNavdataReceived.header.stamp;
 
 
-    if(logfileIMU != NULL)
+    if (logfileIMU != NULL)
     {
         int pingNav = 0, pingVid = 0;
         pthread_mutex_lock(&logIMU_CS);
-        if(logfileIMU != NULL)
+        if (logfileIMU != NULL)
             (*logfileIMU) << getMS(lastNavdataReceived.header.stamp) << " " << lastNavdataReceived.tm << " " <<
             lastNavdataReceived.vx << " " << lastNavdataReceived.vy << " " << lastNavdataReceived.altd << " " << lastNavdataReceived.rotX/1000.0 << " " << lastNavdataReceived.rotY/1000.0 << " " << lastNavdataReceived.rotZ/1000.0 << " " <<
             lastNavdataReceived.pressure << " " <<  0 << " " <<  0 << " " << 0 << " " <<    // control: roll pitch gaz yaw.
@@ -219,22 +219,22 @@ void EstimationNode::vidCb(const sensor_msgs::ImageConstPtr img)
 
 void EstimationNode::comCb(const std_msgs::StringConstPtr str)
 {
-    if(str->data.length() > 2 && str->data.substr(0,2) == "p ")
+    if (str->data.length() > 2 and str->data.substr(0,2) == "p ")
     {
         ptamWrapper->handleCommand(str->data.substr(2,str->data.length()-2));
     }
 
-    if(str->data.length() > 2 && str->data.substr(0,2) == "f ")
+    if (str->data.length() > 2 and str->data.substr(0,2) == "f ")
     {
         mapView->handleCommand(str->data.substr(2,str->data.length()-2));
     }
 
-    if(str->data.length() > 2 && str->data.substr(0,2) == "m ")
+    if (str->data.length() > 2 and str->data.substr(0,2) == "m ")
     {
         mapView->handleCommand(str->data.substr(2,str->data.length()-2));
     }
 
-    if(str->data.length() == 9 && str->data.substr(0,9) == "toggleLog")
+    if (str->data.length() == 9 and str->data.substr(0,9) == "toggleLog")
     {
         this->toogleLogging();
     }
@@ -244,7 +244,7 @@ void EstimationNode::comCb(const std_msgs::StringConstPtr str)
 
 
     int a, b;
-    if(sscanf(str->data.c_str(),"pings %d %d",&a, &b) == 2)
+    if (sscanf(str->data.c_str(),"pings %d %d",&a, &b) == 2)
     {
         filter->setPing((unsigned int)a, (unsigned int)b);
         predTime = ros::Duration((0.001*filter->delayControl)); // set predTime to new delayControl
@@ -285,12 +285,12 @@ void EstimationNode::Loop()
         // --------- if need be: add fake PTAM obs --------
         // if PTAM updates hang (no video or e.g. init), filter is never permanently rolled forward -> queues get too big.
         // dont allow this to happen by faking a ptam observation if queue gets too big (500ms = 100 observations)
-        if((getMS(ros::Time().now()) - filter->predictdUpToTimestamp) > 500)
+        if ((getMS(ros::Time().now()) - filter->predictdUpToTimestamp) > 500)
             filter->addFakePTAMObservation(getMS(ros::Time().now()) - 300);
 
 
         // ---------- maybe send new info --------------------------
-        if((ros::Time::now() - lastInfoSent) > ros::Duration(0.4))
+        if ((ros::Time::now() - lastInfoSent) > ros::Duration(0.4))
         {
             reSendInfo();
             lastInfoSent = ros::Time::now();
@@ -302,10 +302,10 @@ void EstimationNode::Loop()
 }
 void EstimationNode::dynConfCb(tum_ardrone::StateestimationParamsConfig &config, uint32_t level)
 {
-    if(!filter->allSyncLocked && config.PTAMSyncLock)
+    if (!filter->allSyncLocked and config.PTAMSyncLock)
         ROS_WARN("Ptam Sync has been disabled. This fixes scale etc.");
 
-    if(!ptamWrapper->mapLocked && config.PTAMMapLock)
+    if (!ptamWrapper->mapLocked and config.PTAMMapLock)
         ROS_WARN("Ptam Map has been locked.");
 
 
@@ -371,7 +371,7 @@ void EstimationNode::publishTf(TooN::SE3<> trans, ros::Time stamp, int seq, std:
 
 
 
-    if(logfilePTAMRaw != NULL)
+    if (logfilePTAMRaw != NULL)
     {
         pthread_mutex_lock(&(logPTAMRaw_CS));
         // log:
@@ -379,7 +379,7 @@ void EstimationNode::publishTf(TooN::SE3<> trans, ros::Time stamp, int seq, std:
         // - PTAMResulttransformed estimated for videoFrameTimestamp-delayVideo. (using imu only for last step)
         // - predictedPoseSpeed estimated for lastNfoTimestamp+filter->delayControl (actually predicting)
         // - predictedPoseSpeedATLASTNFO estimated for lastNfoTimestamp (using imu only)
-        if(logfilePTAMRaw != NULL)
+        if (logfilePTAMRaw != NULL)
             (*(logfilePTAMRaw)) << seq << " " << stamp << " " << tr.getOrigin().x() << " " << tr.getOrigin().y() << " " << tr.getOrigin().z() << " " <<
             tr.getRotation().x() << " " << tr.getRotation().y() << " " << tr.getRotation().z() << " " << tr.getRotation().w() << std::endl;
 
@@ -392,12 +392,12 @@ void EstimationNode::toogleLogging()
 {
     // first: always check for /log dir
     struct stat st;
-    if(stat((packagePath+std::string("/logs")).c_str(),&st) != 0)
+    if (stat((packagePath+std::string("/logs")).c_str(),&st) != 0)
         mkdir((packagePath+std::string("/logs")).c_str(),S_IXGRP | S_IXOTH | S_IXUSR | S_IRWXU | S_IRWXG | S_IROTH);
 
     char buf[200];
     bool quitLogging = false;
-    if(logfileIMU == 0)
+    if (logfileIMU == 0)
     {
         currentLogID = ((long)time(0))*100+(getMS()%100);       // time(0) + ms
         startedLogClock = getMS();
@@ -416,7 +416,7 @@ void EstimationNode::toogleLogging()
 
     // IMU
     pthread_mutex_lock(&logIMU_CS);
-    if(logfileIMU == 0)
+    if (logfileIMU == 0)
     {
         logfileIMU = new std::ofstream();
         sprintf(buf,"%s/logs/%ld/logIMU.txt",packagePath.c_str(),currentLogID);
@@ -434,7 +434,7 @@ void EstimationNode::toogleLogging()
 
     // IMU
     pthread_mutex_lock(&logPTAM_CS);
-    if(logfilePTAM == 0)
+    if (logfilePTAM == 0)
     {
         logfilePTAM = new std::ofstream();
         sprintf(buf,"%s/logs/%ld/logPTAM.txt",packagePath.c_str(),currentLogID);
@@ -453,7 +453,7 @@ void EstimationNode::toogleLogging()
 
     // IMU
     pthread_mutex_lock(&logFilter_CS);
-    if(logfileFilter == 0)
+    if (logfileFilter == 0)
     {
         logfileFilter = new std::ofstream();
         sprintf(buf,"%s/logs/%ld/logFilter.txt",packagePath.c_str(),currentLogID);
@@ -471,7 +471,7 @@ void EstimationNode::toogleLogging()
 
     // IMU
     pthread_mutex_lock(&logPTAMRaw_CS);
-    if(logfilePTAMRaw == 0)
+    if (logfilePTAMRaw == 0)
     {
         logfilePTAMRaw = new std::ofstream();
         sprintf(buf,"%s/logs/%ld/logPTAMRaw.txt",packagePath.c_str(),currentLogID);
@@ -487,7 +487,7 @@ void EstimationNode::toogleLogging()
     pthread_mutex_unlock(&logPTAMRaw_CS);
 
 
-    if(quitLogging)
+    if (quitLogging)
     {
         printf("\n\nDISABLED LOGGING (logged %ld sec)\n\n\n",(getMS()-startedLogClock+500)/1000);
         char buf2[200];
@@ -533,11 +533,11 @@ void EstimationNode::reSendInfo()
     int kf, kp, kps[4], kpf[4];
     int pos = ptamMsg.find("Found: ");
     int found = 0;
-    if(pos != std::string::npos)
+    if (pos != std::string::npos)
         found = sscanf(ptamMsg.substr(pos).c_str(),"Found: %d/%d %d/%d %d/%d %d/%d Map: %dP, %dKF",
                        &kpf[0],&kps[0],&kpf[1],&kps[1],&kpf[2],&kps[2],&kpf[3],&kps[3],&kp,&kf);
     char bufp[200];
-    if(found == 10)
+    if (found == 10)
         snprintf(bufp,200,"Map: KF: %d, KP: %d (%d of %d found)",
                  kf, kp,kpf[0]+kpf[1]+kpf[2]+kpf[3], kps[0]+kps[1]+kps[2]+kps[3]);
     else

@@ -86,12 +86,12 @@ inline static void rod2rpy(TooN::SO3<> trans, double* roll, double* pitch, doubl
     *yaw *= -180/3.14159265;
 
 
-    while(*pitch > 180) *pitch -= 360;
-    while(*pitch < -180) *pitch += 360;
-    while(*roll > 180) *roll -= 360;
-    while(*roll < -180) *roll += 360;
-    while(*yaw > 180) *yaw -= 360;
-    while(*yaw < -180) *yaw += 360;
+    while (*pitch > 180) *pitch -= 360;
+    while (*pitch < -180) *pitch += 360;
+    while (*roll > 180) *roll -= 360;
+    while (*roll < -180) *roll += 360;
+    while (*yaw > 180) *yaw -= 360;
+    while (*yaw < -180) *yaw += 360;
 }
 
 
@@ -102,14 +102,14 @@ extern unsigned int ros_header_timestamp_base;
 // can only be used to compute time differences, as it has no absolute reference.
 inline static int getMS(ros::Time stamp = ros::Time::now())
 {
-    if(ros_header_timestamp_base == 0)
+    if (ros_header_timestamp_base == 0)
     {
         ros_header_timestamp_base = stamp.sec;
         std::cout << "set ts base to " << ros_header_timestamp_base << std::endl;
     }
     int mss = (stamp.sec - ros_header_timestamp_base) * 1000 + stamp.nsec/1000000;
 
-    if(mss < 0)
+    if (mss < 0)
         std::cout << "ERROR: negative timestamp..."<< std::endl;
     return mss;
 }
