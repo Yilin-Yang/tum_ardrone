@@ -1,2 +1,7 @@
 logs
 *~
+build/*
+*.swo
+*.swp
+*.vim
+*vimrc

@@ -4,28 +4,30 @@
   <version>0.0.0</version>
   <description>The tum_ardrone package</description>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="stefan@todo.todo">stefan</maintainer>
+  <maintainer email="yiliny@umich.edu">Yilin Yang</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <license>GPLv3</license>
 
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/tum_ardrone</url> -->
+  <url type="website">https://github.com/Yilin-Yang/tum_ardrone</url>
+  <url type="website">http://wiki.ros.org/tum_ardrone</url>
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
   <!-- Authors do not have to be maintianers, but could be -->
   <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+  <author email="jajuengel@gmail.com">Jakob Engel</author>
+  <author email="stefan.wilkes@gmail.com">Stefan Wilkes </author>
 
 
   <!-- The *_depend tags are used to specify dependencies -->
@@ -66,7 +68,7 @@
   <run_depend>message_runtime</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
-  
+
 
 
   <!-- The export tag contains other, unspecified, tags -->
