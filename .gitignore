@@ -5,3 +5,4 @@ build/*
 *.swp
 *.vim
 *vimrc
+compile_commands.json

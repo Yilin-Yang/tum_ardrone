@@ -19,8 +19,28 @@ find_package(catkin REQUIRED COMPONENTS
     rospy
 )
 
+option(BUILD_DOCS
+	"Build the documentation."
+	ON
+)
+
+# NOTE: if you build with catkin, then by default, `compile_commands.json` will
+#       get plopped in your catkin build folder. This is usually:
+#           `/path/to/project/catkin_ws/build/tum_ardrone/compile_commands.json`.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Default compiler flags.
+
+# TODO: make code compile with these flags
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++14")
+
 # So that libcvd can compile properly; that's it.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+
+# Add path to search for modules
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake")
 
 # Compile third party libs
 include(ExternalProject)
@@ -71,3 +91,7 @@ catkin_package(CATKIN_DEPENDS message_runtime std_msgs ardrone_autonomy)
 ###########
 
 add_subdirectory(src)
+
+if(BUILD_DOCS)
+    add_subdirectory(docs)
+endif()
