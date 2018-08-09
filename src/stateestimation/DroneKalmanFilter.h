@@ -87,7 +87,10 @@ public:
 };
 
 
-// KalmanFilter with two components (pose, speed)
+/**
+ * @brief Kalman filter with two components: pose, and velocity.
+ * @author Jakob Engel <jajuengel@gmail.com>
+ */
 class PVFilter
 {
 public:
@@ -215,7 +218,11 @@ public:
 };
 
 
-// KalmanFilter with only one component (pose, is observed directly)
+/**
+ * @brief Single-component Kalman filter for tracking pose.
+ * @author Jakob Engel <jajuengel@gmail.com>
+ * @details Has only one component, pose, which is observed directly.
+ */
 class PFilter
 {
 public:
@@ -256,6 +263,10 @@ public:
 };
 
 
+/**
+ * @brief The "composite" Kalman filter, producing the final predicted state.
+ * @author Jakob Engel <jajuengel@gmail.com>
+ */
 class DroneKalmanFilter
 {
 private:
@@ -374,7 +385,8 @@ public:
     void reset();
 
 
-    // resets everything to do with PTAM to zero (call if tracking continues, but PTAM tracking is reset)
+    // resets everything to do with PTAM to zero (call if tracking continues,
+    // but PTAM tracking is reset)
     void clearPTAM();
 
     // predicts up to a specified time in ms, using all available data.
@@ -396,11 +408,15 @@ public:
     void  setCurrentScales(TooN::Vector<3> scales);
 
     // adds a PTAM observation. automatically predicts up to timestamp.
-    void updateScaleXYZ(TooN::Vector<3> ptamDiff, TooN::Vector<3> imuDiff, TooN::Vector<3> OrgPtamPose);
+    void updateScaleXYZ(
+        TooN::Vector<3> ptamDiff,
+        TooN::Vector<3> imuDiff,
+        TooN::Vector<3> OrgPtamPose
+    );
 
 
-    // does not actually change the state of the filter.
-    // makes a compy of it, flushes all queued navdata into it, then predicts up to timestamp.
+    // does not actually change the state of the filter.  makes a compy of it,
+    // flushes all queued navdata into it, then predicts up to timestamp.
     // relatively costly (!)
 
     // transforms a PTAM observation.
@@ -413,7 +429,8 @@ public:
     inline int getNumGoodPTAMObservations() {return numGoodPTAMObservations;}
 
     // when scaling factors are updated, exacly one point stays the same.
-    // if useScalingFixpoint, this point is the current PTAM pose, otherwise it is sclingFixpoint (which is a PTAM-coordinate(!))
+    // if useScalingFixpoint, this point is the current PTAM pose, otherwise it
+    // is sclingFixpoint (which is a PTAM-coordinate(!))
     TooN::Vector<3> scalingFixpoint;    // in PTAM's system (!)
     bool useScalingFixpoint;
 
@@ -435,8 +452,6 @@ public:
     float c6;
     float c7;
     float c8;
-
-
 
     bool handleCommand(std::string s);
 

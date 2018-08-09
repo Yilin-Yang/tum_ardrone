@@ -67,9 +67,11 @@ private:
     tf::TransformBroadcaster tf_broadcaster;
 
     // parameters
-    // every [publishFreq]ms, the node publishes the drones predicted position [predTime]ms into the future.
-    // this pose can then be used to steer the drone. obviously, the larger [predTime], the worse the estimate.
-    // this pose is published on /tf, and simultaneously further info is published on /ardrone/predictedPose
+    // every [publishFreq]ms, the node publishes the drones predicted position
+    // [predTime]ms into the future.  this pose can then be used to steer the
+    // drone. obviously, the larger [predTime], the worse the estimate.  this
+    // pose is published on /tf, and simultaneously further info is published
+    // on /ardrone/predictedPose
     ros::Duration predTime;
     int publishFreq;
 
@@ -112,7 +114,8 @@ public:
     void Loop();
 
     // writes a string message to "/tum_ardrone/com".
-    // is thread-safe (can be called by any thread, but may block till other calling thread finishes)
+    // is thread-safe (can be called by any thread, but may block till other
+    // calling thread finishes)
     void publishCommand(std::string c);
     void reSendInfo();
 

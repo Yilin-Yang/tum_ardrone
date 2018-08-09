@@ -36,6 +36,10 @@ class PTAMWrapper;
 class Predictor;
 class EstimationNode;
 
+/**
+ * @brief A point in the recorded path of the AR.Drone, used for visualization.
+ * @author Jakob Engel <jajuengel@gmail.com>
+ */
 class TrailPoint
 {
 public:
@@ -55,13 +59,17 @@ public:
     bool PTAMValid;
 };
 
+/**
+ * @brief Graphics object for visualizing the AR.Drone's localized state.
+ * @author Jakob Engel <jajuengel@gmail.com>
+ */
 class MapView : private CVD::Thread, private MouseKeyHandler
 {
 private:
     // base window
     GLWindow2* myGLWindow;
-    CVD::ImageRef desiredWindowSize;        // size the window scould get changed to if [changeSizeNextRender]
-    CVD::ImageRef defaultWindowSize;        // size the window gets opened with
+    CVD::ImageRef desiredWindowSize; // size the window scould get changed to if [changeSizeNextRender]
+    CVD::ImageRef defaultWindowSize; // size the window gets opened with
     bool changeSizeNextRender;
 
 

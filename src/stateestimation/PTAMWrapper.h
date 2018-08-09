@@ -45,18 +45,23 @@ class EstimationNode;
 typedef TooN::Vector<3> tvec3;
 typedef TooN::SE3<> tse3;
 
-// this is a wrapper around PTAM, doing the scale estimation etc.
-// it runs in its own thread, and has its own window (Camera Image + PTAM points etc.)
-// the thread re-renders old images, or (via callback) performs ROS-message handeling (i.e. tracking).
-// it then updates the DroneKalmanFilter.
 
+/**
+ * @brief Encapsulation of PTAM; provides estimations for the DroneKalmanFilter.
+ * @author Jakob Engel <jajuengel@gmail.com>
+ * @details This is a wrapper around PTAM, handling scale estimation, etc. It
+ *      runs in its own thread, and has its own GUI window showing a live
+ *      camera image, tracked PTAM points, and so on. The thread re-renders old
+ *      images, or (via callback) performs ROS-message handling (i.e.
+ *      tracking). It then updates the DroneKalmanFilter.
+ */
 class PTAMWrapper : private CVD::Thread, private MouseKeyHandler
 {
 private:
     // base window
     GLWindow2* myGLWindow;
-    CVD::ImageRef desiredWindowSize;        // size the window scould get changed to if [changeSizeNextRender]
-    CVD::ImageRef defaultWindowSize;        // size the window gets opened with
+    CVD::ImageRef desiredWindowSize; // size the window scould get changed to if [changeSizeNextRender]
+    CVD::ImageRef defaultWindowSize; // size the window gets opened with
     bool changeSizeNextRender;
 
 
@@ -85,8 +90,9 @@ private:
     int frameWidth, frameHeight;
 
 
-    // Map is in my global Coordinate system. keyframes give the front-cam-position, i.e.
-    // CFromW is "GlobalToFront". this is achieved by aligning the global coordinate systems in the very beginning.
+    // Map is in my global Coordinate system. keyframes give the
+    // front-cam-position, i.e.  CFromW is "GlobalToFront". this is achieved by
+    // aligning the global coordinate systems in the very beginning.
     Map *mpMap;
     MapMaker *mpMapMaker;
     Tracker *mpTracker;
@@ -177,9 +183,16 @@ public:
     void startSystem();
     void stopSystem();
 
-
-
-    enum {PTAM_IDLE = 0, PTAM_INITIALIZING = 1, PTAM_LOST = 2, PTAM_GOOD = 3, PTAM_BEST = 4, PTAM_TOOKKF = 5, PTAM_FALSEPOSITIVE = 6} PTAMStatus;
+    enum PTAMStatus
+    {
+        PTAM_IDLE = 0,
+        PTAM_INITIALIZING = 1,
+        PTAM_LOST = 2,
+        PTAM_GOOD = 3,
+        PTAM_BEST = 4,
+        PTAM_TOOKKF = 5,
+        PTAM_FALSEPOSITIVE = 6,
+    };
     TooN::SE3<> lastPTAMResultRaw;
     std::string lastPTAMMessage;
 
